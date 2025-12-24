@@ -61,3 +61,50 @@ NFR-002 (Security): The system shall hash all passwords using a secure hashing a
 NFR-003 (Scalability): The system shall support at least 100 concurrent users per tenant.
 NFR-004 (Availability): The system shall maintain an uptime of at least 99%.
 NFR-005 (Usability): The system shall provide a responsive user interface compatible with mobile and desktop devices.
+
+## Database ERD
+
+The database structure for our multi-tenant SaaS project is shown below:
+
+![Database ERD](docs/image/database-erd.png)
+
+## API architecture
+
+Auth Module
+
+| Endpoint                  | Method | Auth Required | Role Required | Description                      |
+| ------------------------- | ------ | ------------- | ------------- | -------------------------------- |
+| `/api/auth/register`      | POST   | No            | N/A           | Register a new user              |
+| `/api/auth/login`         | POST   | No            | N/A           | Login and receive JWT token      |
+| `/api/auth/logout`        | POST   | Yes           | Any           | Logout user and invalidate token |
+| `/api/auth/refresh-token` | POST   | Yes           | Any           | Refresh JWT token                |
+
+Users Module
+
+| Endpoint         | Method | Auth Required | Role Required | Description                     |
+| ---------------- | ------ | ------------- | ------------- | ------------------------------- |
+| `/api/users`     | GET    | Yes           | Admin         | Get all users in all tenants    |
+| `/api/users/me`  | GET    | Yes           | Any           | Get current logged-in user info |
+| `/api/users/:id` | GET    | Yes           | Admin         | Get a specific user             |
+| `/api/users/:id` | PUT    | Yes           | Admin/User    | Update a user (self or admin)   |
+| `/api/users/:id` | DELETE | Yes           | Admin         | Delete a user                   |
+
+Projects Module
+
+| Endpoint            | Method | Auth Required | Role Required | Description                 |
+| ------------------- | ------ | ------------- | ------------- | --------------------------- |
+| `/api/projects`     | GET    | Yes           | Any           | Get all projects for tenant |
+| `/api/projects`     | POST   | Yes           | Any           | Create a new project        |
+| `/api/projects/:id` | GET    | Yes           | Any           | Get project details         |
+| `/api/projects/:id` | PUT    | Yes           | Any           | Update project info         |
+| `/api/projects/:id` | DELETE | Yes           | Admin         | Delete project              |
+
+Tasks Module
+
+| Endpoint         | Method | Auth Required | Role Required | Description              |
+| ---------------- | ------ | ------------- | ------------- | ------------------------ |
+| `/api/tasks`     | GET    | Yes           | Any           | Get all tasks for tenant |
+| `/api/tasks/:id` | GET    | Yes           | Any           | Get task details         |
+| `/api/tasks`     | POST   | Yes           | Any           | Create a new task        |
+| `/api/tasks/:id` | PUT    | Yes           | Any           | Update task info         |
+| `/api/tasks/:id` | DELETE | Yes           | Admin         | Delete task              |
